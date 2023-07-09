@@ -12,7 +12,7 @@ const intialzeDbAndServer = async() =>{
             driver : sqlite3.Database,
         });
         app.listen(3000,() => {
-            console.log("Server Running at http://localhost:3000/")
+            console.log("Server Running at http://localhost:3000")
         });
     }catch  (e){
         console.log(`DB error : ${e.message}`);
@@ -28,12 +28,38 @@ intialzeDbAndServer();
 app.get("/players/",async (request,response) => {
     const getPlayersQuery = `
     SELECT
-    *
+        *
     FROM
-    cricket_team 
+        cricket_team ;
     `;
     const playersArray =await db.all(getPlayersQuery);
     response.send(playersArray);
     console.log(playersArray)
-})
+});
+
+// API 2 --------------------------------------------------------//
+app.use(express.json());
+
+app.get("/players/",async(request,response) => {
+    const playerDetails = request.body;
+    const {
+        playerName,
+        jersyNumber,
+        role
+    } = playerDetails
+    const addPlayerQuery = `
+    INSERT INTO
+      cricket_team (playerName , jersyNumber, role)
+
+    VALUES
+      (
+        ${playerName},
+        ${jersyNumber},
+        ${role}
+      );
+    `;
+    const dbResponse = await db.run(addPlayerQuery);
+    const playerId = dbResponse.lastID;
+    response.send({playerId : playerId});
+});
 

@@ -1,4 +1,6 @@
-send request
-GET http://localhost:3000/
+GET http://localhost:3000/players/ 
 
-GET http://localhost:3000/players/
+###
+POST http://localhost:3000/players/
+
+
