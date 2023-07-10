@@ -5,7 +5,8 @@ const path = require("path")
 const app = express();
 let db = null;
 app.use(express.json());
-dbPath = path.join(__dirname,"cricketTeam.db")
+
+const dbPath = path.join(__dirname,"cricketTeam.db")
 const intialzeDbAndServer = async() =>{
     try{
         db = await open({
@@ -13,9 +14,9 @@ const intialzeDbAndServer = async() =>{
             driver : sqlite3.Database,
         });
         app.listen(3000,() => {
-            console.log("Server Running at http://localhost:3000")
+            console.log("Server Running at http://localhost:3000/")
         });
-    }catch  (e){
+    }catch(e){
         console.log(`DB error : ${e.message}`);
         process.exit(1);
 
@@ -75,7 +76,7 @@ app.get("/players/:playerId/", async (request,response) => {
     FROM
      cricket_team
      WHERE 
-       playerId = ${playerId};
+       player_id = ${playerId};
     `;
     const player = await db.run(getPlayerQuery);
     response.send(player);
@@ -95,11 +96,11 @@ app.put("/players/:playerId/", async(request,response) => {
     UPDATE 
       cricket_team
      SET 
-       playerName = ${playerName},
-       jersyNumber = ${jersyNumber},
+       player_name = ${playerName},
+       jersy_number = ${jersyNumber},
        role = ${role}
      WHERE 
-       playerId = ${playerId};   
+       player_id = ${playerId};   
     `;
     await db.run(updatePlayerQuery);
     response.send("Player Details Updated")
@@ -113,10 +114,10 @@ app.delete("/players/:playerId/",async (request,response) => {
     const  deleteBookQuery = ` 
       DELETE FROM 
         WHERE 
-         playerId = ${playerId};    
+         player_id = ${playerId};    
     `;
     await db.run(deleteBookQuery);
     response.send("Player Remove");
 });
 
-
+module.exports = app;
